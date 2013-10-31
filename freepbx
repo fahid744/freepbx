@@ -59,9 +59,9 @@ mysql -e "DELETE FROM mysql.user WHERE User='root' AND Host!='localhost'"
 /etc/init.d/mysqld restart
 
 cd /usr/src
-wget http://mirror.freepbx.org/freepbx-2.10.0.tar.gz
-tar -xzf freepbx-2.10.0.tar.gz
-cd freepbx-2.10.0
+wget http://mirror.freepbx.org/freepbx-2.9.0.tar.gz
+tar -xzf freepbx-2.9.0.tar.gz
+cd freepbx-2.9.0
 
 mysqladmin -u root -p$SECRET create asterisk
 mysqladmin -u root -p$SECRET create asteriskcdrdb
@@ -93,10 +93,10 @@ chmod 755 /usr/sbin/safe_asterisk
 rm -rf /usr/sbin/safe_asterisk.temp
 
 
-cd /usr/src/freepbx-2.10.0
+cd /usr/src/freepbx-2.9.0
 ./start_asterisk start
 cp amportal.conf /etc/amportal.conf
-./install_amp --username=asteriskuser --password=$SECRET
+./install_amp --username=asteriskuser --password=$SECRET --install-fop false
 
 chown -R asterisk.asterisk /var/lib/asterisk/sounds/custom/
 mv /etc/asterisk/sip_notify.conf /etc/asterisk/sip_notify.conf.OLD
@@ -106,25 +106,11 @@ chown asterisk.asterisk /var/www/html/index.html
 cat "/usr/local/sbin/amportal start" >> /etc/rc.local
 
 chown -R asterisk.asterisk /var/lib/php/session/
-chown -R asterisk.asterisk /var/lib/asterisk/moh/
+chown -R asterisk.asterisk /var/lib/asterisk/mohmp3/
 
 echo "HOSTNAME=$HOSTNAME" >> /etc/sysconfig/network
 hostname "$HOSTNAME"
 
-
-rm -rf /etc/asterisk/extensions.conf 
-ln -s /var/www/html/admin/modules/core/etc/extensions.conf /etc/asterisk/extensions.conf
-rm -rf /etc/asterisk/sip.conf
-ln -s /var/www/html/admin/modules/core/etc/sip.conf /etc/asterisk/sip.conf
-rm -rf /etc/asterisk/iax.conf
-ln -s /var/www/html/admin/modules/core/etc/iax.conf /etc/asterisk/iax.conf
-rm -rf /etc/asterisk/logger.conf
-ln -s /var/www/html/admin/modules/core/etc/logger.conf /etc/asterisk/logger.conf
-rm -rf /etc/asterisk/features.conf
-ln -s /var/www/html/admin/modules/core/etc/features.conf /etc/asterisk/features.conf
-rm -rf /etc/asterisk/ccss.conf
-ln -s /var/www/html/admin/modules/campon/etc/ccss.conf /etc/asterisk/ccss.conf
-chown -R asterisk.asterisk /etc/asterisk
-
+chown asterisk.asterisk /var/lib/asterisk/mohmp3/
 echo "don't forget to lock down your pbx"
 echo "alohatone: http://www.alohatone.com - call us , we can help 808-848-8888"
